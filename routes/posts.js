@@ -53,8 +53,34 @@ router.get('/:id', async function(req, res, next){
     }
 });
 
-router.post('/', function(req, res, next){
-    res.send('router create posts');
+router.post('/', async function(req, res, next){
+    try {
+        const {
+            title,
+            content,
+            tags,
+            published
+        } = req.body;
+        const posts = await Posts.create({
+            title,
+            content,
+            tags,
+            published
+        });
+        if(posts){
+            res.json({
+                'status': 'ok',
+                'message': 'add data posts success',
+                'data': posts,
+            });    
+        }
+    }catch(err){
+        res.status(500).json({
+            'status': 'ERROR',
+            'messages': 'Internal Server Error'
+          })
+    }
+    
 });
 
 router.put('/:id', function(req, res, next){
