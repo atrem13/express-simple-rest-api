@@ -28,8 +28,29 @@ router.get('/', async function(req, res, next){
     }
 });
 
-router.get('/:id', function(req, res, next){
-    res.send('router get one posts');
+router.get('/:id', async function(req, res, next){
+    try {
+        const id = req.params.id;
+        const posts = await Posts.findByPk(id);
+        if(posts){
+            res.json({
+                'status': 'ok',
+                'message': 'detail data posts',
+                'data': posts,
+            });    
+        }else{
+            res.status(404).json({
+                'status': 'not found',
+                'message': 'data posts not found',
+                'data': null,
+            });
+        }
+    }catch(err){
+        res.status(500).json({
+            'status': 'ERROR',
+            'messages': 'Internal Server Error'
+          })
+    }
 });
 
 router.post('/', function(req, res, next){
