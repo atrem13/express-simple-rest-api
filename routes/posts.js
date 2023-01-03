@@ -83,12 +83,61 @@ router.post('/', async function(req, res, next){
     
 });
 
-router.put('/:id', function(req, res, next){
-    res.send('router update posts');
+router.put('/:id', async function(req, res, next){
+    try {
+        const id = req.params.id;
+        const {
+            title,
+            content,
+            tags,
+            published
+        } = req.body;
+        const posts = await Posts.update({
+            title,
+            content,
+            tags,
+            published
+        }, {
+            where:{
+                id: id
+            }
+        });
+        if(posts){
+            res.json({
+                'status': 'ok',
+                'message': 'update data posts success',
+                'data': posts,
+            });    
+        }
+    }catch(err){
+        res.status(500).json({
+            'status': 'ERROR',
+            'messages': 'Internal Server Error'
+          })
+    }
 });
 
-router.delete('/:id', function(req, res, next){
-    res.send('router delete posts');
+router.delete('/:id', async function(req, res, next){
+    try {
+        const id = req.params.id;
+        const posts = await Posts.destroy({
+            where:{
+                id: id
+            }
+        });
+        if(posts){
+            res.json({
+                'status': 'ok',
+                'message': 'delete data posts success',
+                'data': posts,
+            });    
+        }
+    }catch(err){
+        res.status(500).json({
+            'status': 'ERROR',
+            'messages': 'Internal Server Error'
+          })
+    }
 });
 
 export default router;
