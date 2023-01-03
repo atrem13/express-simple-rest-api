@@ -1,24 +1,46 @@
 import express from 'express';
+const models = require('../models');
+const Posts = models.posts; 
 
 const router = express.Router();
 
-route.get('/', function(req, res, next){
-    res.send('router get all posts');
+router.get('/', async function(req, res, next){
+    try {
+        const posts = await Posts.findAll({});
+        if(posts.length > 0){
+            res.json({
+                'status': 'ok',
+                'message': 'list data posts',
+                'data': posts,
+            });    
+        }else{
+            res.json({
+                'status': 'ok',
+                'message': 'empty data posts',
+                'data': [],
+            });
+        }
+    }catch(err){
+        res.status(500).json({
+            'status': 'ERROR',
+            'messages': 'Internal Server Error'
+          })
+    }
 });
 
-route.get('/:id', function(req, res, next){
+router.get('/:id', function(req, res, next){
     res.send('router get one posts');
 });
 
-route.post('/', function(req, res, next){
+router.post('/', function(req, res, next){
     res.send('router create posts');
 });
 
-route.put('/:id', function(req, res, next){
+router.put('/:id', function(req, res, next){
     res.send('router update posts');
 });
 
-route.delete('/:id', function(req, res, next){
+router.delete('/:id', function(req, res, next){
     res.send('router delete posts');
 });
 
